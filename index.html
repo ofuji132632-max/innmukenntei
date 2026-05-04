@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>淫夢検定 ～真夏の夜の知識を試せ～</title>
+<meta name="description" content="淫夢ミーム知識を試す全15問の検定。初級・中級・上級・ホモの4段階で実力を判定！毎回ランダムに出題。">
+<!-- 広告タグ挿入場所 -->
+<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --sage:    #6a8480;
+  --beige:   #b8b0a4;
+  --purple:  #2e2438;
+  --mauve:   #8a5858;
+  --dirt:    #1a1520;   /* 汚い暗背景 */
+  --paper:   #e8e0d0;   /* 薄汚れた紙 */
+  --paper2:  #ddd5c2;
+  --ink:     #1a1010;
+  --ink2:    #3a2a2a;
+  --rust:    #7a3030;
+  --mustard: #8a7020;
+  --mold:    #4a6040;   /* カビっぽい緑 */
+  --stain:   rgba(90,60,20,0.08); /* 染み */
+}
+
+html { scroll-behavior: auto; }
+
+body {
+  font-family: 'DotGothic16', 'MS Gothic', 'ＭＳ ゴシック', monospace;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ===== 薄汚れた紙テクスチャ ===== */
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(90,60,20,0.03) 28px, rgba(90,60,20,0.03) 29px),
+    repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(90,60,20,0.02) 40px, rgba(90,60,20,0.02) 41px);
+}
+/* 染み */
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 120px 80px at 10% 20%, rgba(100,70,20,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 200px 120px at 85% 60%, rgba(80,50,10,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 80px 60px at 50% 90%, rgba(60,40,10,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 150px 90px at 30% 75%, rgba(90,60,20,0.04) 0%, transparent 70%);
+}
+
+/* ===== スキャンライン ===== */
+.scanlines {
+  position: fixed; inset: 0; pointer-events: none; z-index: 9998;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px);
+}
+
+/* ===== グリッチオーバーレイ ===== */
+.glitch-overlay {
+  position: fixed; inset: 0; pointer-events: none; z-index: 9997;
+  opacity: 0;
+  background: linear-gradient(transparent 40%, rgba(158,107,107,0.15) 40%, rgba(158,107,107,0.15) 42%, transparent 42%);
+  animation: glitch-flash 8s infinite;
+}
+@keyframes glitch-flash {
+  0%,93%,100% { opacity:0; transform: translateX(0); }
+  94% { opacity:1; transform: translateX(-4px); }
+  95% { opacity:0; }
+  96% { opacity:1; transform: translateX(3px); background: linear-gradient(transparent 60%, rgba(107,158,107,0.12) 60%, rgba(107,158,107,0.12) 62%, transparent 62%); }
+  97% { opacity:0; transform: translateX(0); }
+}
+
+/* ===== 流れるコメント ===== */
+#nico-comments {
+  position: fixed; top:0; left:0; right:0; height:100vh;
+  pointer-events: none; z-index: 100; overflow: hidden;
+}
+.nico-comment {
+  position: absolute; right: -700px; white-space: nowrap;
+  font-family: 'DotGothic16', monospace;
+  animation: slide-comment linear forwards;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+}
+@keyframes slide-comment { from{right:-700px} to{right:110%} }
+
+/* ===== ヘッダー ===== */
+.site-header {
+  background: var(--dirt);
+  border-bottom: 3px double var(--mauve);
+  position: relative; overflow: hidden; z-index: 10;
+}
+.site-header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(255,255,255,0.01) 3px, rgba(255,255,255,0.01) 6px);
+}
+.header-marquee {
+  background: var(--rust);
+  padding: 3px 0;
+  font-size: 11px;
+  color: #ffcc88;
+  overflow: hidden;
+  white-space: nowrap;
+  border-bottom: 1px solid #5a2020;
+}
+.header-marquee span {
+  display: inline-block;
+  animation: marquee-scroll 20s linear infinite;
+  padding-left: 100%;
+}
+@keyframes marquee-scroll { from{transform:translateX(0)} to{transform:translateX(-100%)} }
+
+.header-main {
+  padding: 16px 16px 14px;
+  text-align: center;
+  position: relative;
+}
+.logo-wrap { position: relative; display: inline-block; }
+.logo-text {
+  font-size: clamp(32px, 9vw, 58px);
+  font-family: 'DotGothic16', monospace;
+  color: var(--beige);
+  letter-spacing: 0.2em;
+  text-shadow:
+    2px 0 0 var(--mauve),
+    -1px 0 0 var(--mold),
+    3px 3px 0 rgba(0,0,0,0.5);
+  animation: logo-glitch 6s infinite;
+  position: relative;
+}
+.logo-text::before {
+  content: attr(data-text);
+  position: absolute; inset: 0;
+  color: var(--mauve);
+  clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
+  transform: translateX(-3px);
+  animation: logo-glitch2 6s infinite;
+  opacity: 0;
+}
+@keyframes logo-glitch {
+  0%,88%,100% { text-shadow: 2px 0 0 var(--mauve), -1px 0 0 var(--mold), 3px 3px 0 rgba(0,0,0,0.5); }
+  89% { text-shadow: -4px 0 0 var(--mauve), 3px 0 0 var(--mold), 3px 3px 0 rgba(0,0,0,0.5); transform: translateX(2px); }
+  90% { text-shadow: 2px 0 0 var(--mauve), -1px 0 0 var(--mold), 3px 3px 0 rgba(0,0,0,0.5); transform: translateX(0); }
+  91% { transform: translateX(-2px); }
+  92% { transform: translateX(0); }
+}
+@keyframes logo-glitch2 {
+  0%,88%,100% { opacity:0; }
+  89%,91% { opacity:0.7; }
+  90%,92% { opacity:0; }
+}
+.logo-sub {
+  font-size: 11px; color: var(--sage); letter-spacing: 0.15em; margin-top: 3px;
+  text-shadow: 0 0 8px var(--sage);
+}
+
+/* ===== Win95風カウンター ===== */
+.win95-bar {
+  display: flex; gap: 10px; align-items: center;
+  padding: 4px 16px;
+  background: #c0c0c0;
+  border-top: 1px solid #fff;
+  border-bottom: 2px solid #808080;
+}
+.win95-field {
+  background: #fff;
+  border: 2px inset #808080;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-family: 'DotGothic16', monospace;
+  color: #000;
+  min-width: 70px;
+}
+.win95-label { font-size: 10px; color: #000; font-family: 'DotGothic16', monospace; }
+
+/* ===== メイン ===== */
+.main-wrap {
+  max-width: 680px; margin: 0 auto;
+  padding: 14px 10px 80px;
+  position: relative; z-index: 10;
+}
+.screen { display:none; }
+.screen.active { display:block; }
+
+/* ===== Win95風ボックス ===== */
+.win-box {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #fff #808080 #808080 #fff;
+  margin-bottom: 10px;
+  box-shadow: 2px 2px 0 #000;
+}
+.win-box-title {
+  background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
+  padding: 3px 8px;
+  display: flex; align-items: center; gap: 6px;
+  border-bottom: 1px solid #000;
+}
+.win-box-title span { font-size: 11px; color: #fff; font-family: 'DotGothic16', monospace; letter-spacing: 0.05em; }
+.win-box-btns { display:flex; gap:2px; margin-left:auto; }
+.win-box-btn {
+  width: 14px; height: 12px;
+  background: #c0c0c0;
+  border: 1px solid; border-color: #fff #808080 #808080 #fff;
+  font-size: 8px; line-height: 1; text-align: center; cursor: default;
+  font-family: monospace; color: #000;
+  display: flex; align-items: center; justify-content: center;
+}
+.win-box-body { padding: 14px; }
+
+/* 汚れた紙風インナーボックス */
+.paper-inner {
+  background: var(--paper2);
+  border: 1px inset #999;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  position: relative;
+}
+.paper-inner::before {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 60px 40px at 90% 10%, rgba(100,70,20,0.08) 0%, transparent 70%);
+}
+
+/* ===== タグ・情報 ===== */
+.tag-area { display:flex; flex-wrap:wrap; gap:5px; margin: 8px 0; }
+.nico-tag {
+  background: var(--paper);
+  border: 1px solid #999;
+  border-color: #fff #808080 #808080 #fff;
+  padding: 1px 8px; font-size: 11px; color: var(--ink2);
+  box-shadow: 1px 1px 0 #808080;
+}
+
+.grade-row { display:flex; gap:6px; flex-wrap:wrap; margin: 8px 0; }
+.grade-pill { padding: 2px 12px; font-size: 12px; border: 1px solid; font-family: 'DotGothic16', monospace; }
+.gp-homo { color: var(--mauve); border-color: var(--mauve); background: rgba(138,88,88,0.1); }
+.gp-adv  { color: var(--sage);  border-color: var(--sage);  background: rgba(106,132,128,0.1); }
+.gp-mid  { color: var(--mustard); border-color: var(--mustard); background: rgba(138,112,32,0.1); }
+.gp-beg  { color: #666; border-color: #999; background: rgba(100,100,100,0.08); }
+
+.grade-table { width:100%; font-size:12px; border-collapse:collapse; }
+.grade-table td { padding: 4px 6px; border-bottom: 1px dotted #bbb; }
+.grade-table td:first-child { color: #666; }
+.homo-c{color:var(--mauve)} .adv-c{color:var(--sage)} .mid-c{color:var(--mustard)} .beg-c{color:#888}
+
+/* ===== ボタン（Win95風） ===== */
+.win-btn {
+  display: block; width: 100%;
+  padding: 6px 12px;
+  background: #c0c0c0;
+  border: 2px solid; border-color: #fff #808080 #808080 #fff;
+  box-shadow: 1px 1px 0 #000;
+  font-family: 'DotGothic16', monospace;
+  font-size: 15px; letter-spacing: 0.1em;
+  cursor: pointer; color: #000;
+  transition: none;
+  text-align: center;
+}
+.win-btn:active {
+  border-color: #808080 #fff #fff #808080;
+  box-shadow: none;
+  transform: translate(1px, 1px);
+}
+.win-btn-start {
+  background: linear-gradient(180deg, #d0a0a0 0%, #a06060 100%);
+  color: #fff;
+  font-size: 17px;
+  border-color: #e0b0b0 #804040 #804040 #e0b0b0;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+  letter-spacing: 0.2em;
+}
+.win-btn-start:hover { filter: brightness(1.05); }
+.win-btn-retry {
+  font-size: 13px;
+  margin-top: 2px;
+}
+.win-btn-next {
+  width: auto; display: block; margin-left: auto;
+  font-size: 13px; padding: 5px 20px;
+}
+.win-btn-next.hidden { display: none; }
+
+/* ===== クイズUI ===== */
+.q-meta-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 5px 0 8px; font-size: 11px; color: #555;
+  border-bottom: 1px dotted #bbb; margin-bottom: 12px;
+}
+.live-score { color: var(--mauve); font-weight: bold; font-size: 13px; }
+
+.progress-wrap { margin-bottom: 14px; }
+.progress-label { font-size: 10px; color: #888; margin-bottom: 3px; }
+.progress-bar {
+  height: 16px;
+  background: #fff;
+  border: 2px inset #999;
+  overflow: hidden; position: relative;
+}
+.progress-fill {
+  height: 100%;
+  background: repeating-linear-gradient(45deg, var(--mauve), var(--mauve) 6px, #a07070 6px, #a07070 12px);
+  transition: width 0.3s steps(8);
+}
+
+.q-num-tag {
+  display: inline-block; background: #000080; color: #fff;
+  font-size: 10px; padding: 1px 8px; margin-bottom: 8px;
+  font-family: 'DotGothic16', monospace; letter-spacing: 0.1em;
+}
+.q-level-tag {
+  display: inline-block; font-size: 10px; padding: 1px 7px;
+  margin-left: 4px; border: 1px solid; vertical-align: middle; margin-bottom: 8px;
+}
+.q-level-tag.lv-easy { color: #666; border-color: #999; background: #f0f0f0; }
+.q-level-tag.lv-mid  { color: var(--mustard); border-color: var(--mustard); background: rgba(138,112,32,0.08); }
+.q-level-tag.lv-hard { color: var(--sage); border-color: var(--sage); background: rgba(106,132,128,0.08); }
+
+.q-text {
+  font-size: 15px; line-height: 1.9; color: var(--ink);
+  margin-bottom: 14px; min-height: 52px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px inset #999;
+}
+
+.choices { display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
+.choice-btn {
+  text-align: left; padding: 9px 12px;
+  background: #c8c8c8;
+  border: 2px solid; border-color: #e8e8e8 #888 #888 #e8e8e8;
+  box-shadow: 1px 1px 0 #000;
+  cursor: pointer; font-size: 13px;
+  font-family: 'DotGothic16', monospace;
+  color: var(--ink); line-height: 1.6;
+}
+.choice-btn::before { content: '▷ '; color: #888; font-size: 9px; }
+.choice-btn:hover:not(:disabled) {
+  background: #d8d0c8;
+  border-color: #fff #666 #666 #fff;
+}
+.choice-btn:active:not(:disabled) {
+  border-color: #888 #e8e8e8 #e8e8e8 #888;
+  box-shadow: none; transform: translate(1px,1px);
+}
+.choice-btn.correct {
+  background: #c8e8c8;
+  border-color: #e8ffe8 #408040 #408040 #e8ffe8;
+  color: #204020;
+}
+.choice-btn.correct::before { content: '○ '; color: #408040; font-size: 13px; }
+.choice-btn.wrong {
+  background: #e8c8c8;
+  border-color: #ffe8e8 #804040 #804040 #ffe8e8;
+  color: #402020;
+}
+.choice-btn.wrong::before { content: '× '; color: #804040; font-size: 13px; }
+.choice-btn:disabled { cursor: default; }
+
+.feedback {
+  padding: 10px 12px; font-size: 12px; line-height: 1.9;
+  margin-bottom: 10px;
+  border: 2px inset #999;
+}
+.feedback.correct { background: #e8f4e8; color: #204020; border-color: #80a080 #e8f4e8 #e8f4e8 #80a080; }
+.feedback.wrong   { background: #f4e8e8; color: #402020; border-color: #a08080 #f4e8e8 #f4e8e8 #a08080; }
+.feedback.hidden  { display: none; }
+
+/* ===== 結果画面 ===== */
+.result-center { text-align: center; padding: 16px 0; }
+.result-label  { font-size: 11px; color: #666; letter-spacing: 0.2em; margin-bottom: 6px; }
+.big-grade {
+  font-size: clamp(3rem, 12vw, 5rem);
+  font-family: 'DotGothic16', monospace;
+  letter-spacing: 0.2em; line-height: 1; margin-bottom: 6px;
+  animation: grade-blink 0.8s steps(1) 4;
+  position: relative;
+}
+.big-grade::after {
+  content: attr(data-text);
+  position: absolute; left: 3px; top: 2px;
+  opacity: 0.3;
+  animation: grade-shadow 0.8s steps(1) 4;
+}
+@keyframes grade-blink { 50%{opacity:0} }
+@keyframes grade-shadow { 50%{opacity:0} }
+.score-text { font-size: 13px; color: #666; }
+
+.score-bar-outer {
+  background: #fff; border: 2px inset #999;
+  height: 20px; margin: 12px 0; overflow: hidden;
+}
+.score-bar-fill {
+  height: 100%; transition: width 1.5s steps(20);
+  background: repeating-linear-gradient(45deg, var(--mauve), var(--mauve) 8px, #c08080 8px, #c08080 16px);
+}
+
+.grade-desc-box {
+  background: #fff; border: 1px inset #999;
+  padding: 10px 12px; font-size: 12px; color: #444;
+  line-height: 1.9; margin-bottom: 12px;
+}
+
+.ad-slot {
+  background: #f0ece0; border: 2px inset #999;
+  padding: 14px; text-align: center;
+  font-size: 11px; color: #888;
+  min-height: 80px; display: flex; align-items: center; justify-content: center;
+  margin: 12px 0; font-family: 'DotGothic16', monospace;
+}
+
+.answer-log h3 { font-size: 11px; color: #666; letter-spacing: 0.1em; padding-bottom: 4px; border-bottom: 1px dotted #bbb; margin-bottom: 8px; }
+.log-item { display:flex; gap:8px; align-items:flex-start; padding:5px 8px; font-size:11px; margin-bottom:3px; border-left:2px solid; background:#f0ece0; line-height:1.6; }
+.log-item.ok { border-color: #408040; color: #204020; }
+.log-item.ng { border-color: #804040; color: #402020; }
+.log-mark { font-weight:bold; flex-shrink:0; }
+
+/* ===== 警告バナー（アングラ感） ===== */
+.warning-banner {
+  background: #ffff88; border: 2px solid #cc0000;
+  padding: 6px 10px; font-size: 11px; color: #cc0000;
+  text-align: center; margin-bottom: 8px;
+  font-family: 'DotGothic16', monospace;
+  animation: warning-flash 2s steps(1) infinite;
+}
+@keyframes warning-flash { 0%,49%{background:#ffff88} 50%,100%{background:#ff8888} }
+
+/* ===== カウンター（古いWeb） ===== */
+.old-counter {
+  display: inline-flex; gap: 0; margin-bottom: 8px;
+}
+.counter-digit {
+  background: #000; color: #00ff00;
+  font-size: 18px; font-family: 'DotGothic16', monospace;
+  padding: 2px 4px; border: 1px solid #00aa00;
+  min-width: 18px; text-align: center;
+  text-shadow: 0 0 6px #00ff00;
+}
+
+.divider { border:none; border-top:1px dotted #bbb; margin:12px 0; }
+
+/* ===== 横断幕風テキスト ===== */
+.yokodan {
+  background: var(--dirt); color: var(--beige);
+  font-size: 11px; padding: 4px 10px;
+  text-align: center; letter-spacing: 0.2em;
+  border-top: 1px solid var(--mauve);
+  border-bottom: 1px solid var(--mauve);
+  margin-bottom: 8px;
+}
+</style>
+</head>
+<body>
+
+<div class="scanlines"></div>
+<div class="glitch-overlay"></div>
+<div id="nico-comments"></div>
+
+<!-- ===== HEADER ===== -->
+<div class="site-header">
+  <div class="header-marquee">
+    <span>★★★ 淫夢検定β版 ★ ホモ・淫夢・野獣先輩・ミーム・なんJ・真夏の夜の淫夢 ★ このサイトは18歳以上を対象としています ★ ｱｰｲｷｿ ★ おかのした ★ イキスギィ！ ★ 多少はね？ ★ はっきりわかんだね ★ だいぶ溜まってんじゃんアゼルバイジャン ★★★　</span>
+  </div>
+  <div class="header-main">
+    <div class="logo-wrap">
+      <div class="logo-text" data-text="淫夢検定">淫夢検定</div>
+    </div>
+    <div class="logo-sub">── 真夏の夜の知識を試せ ──</div>
+  </div>
+</div>
+
+<div class="win95-bar">
+  <span class="win95-label">再生数:</span>
+  <span class="win95-field" id="view-count">000000</span>
+  <span class="win95-label">コメント:</span>
+  <span class="win95-field">888</span>
+  <span class="win95-label">マイリスト:</span>
+  <span class="win95-field">88</span>
+</div>
+
+<div class="main-wrap">
+
+  <!-- ===== START ===== -->
+  <div id="screen-start" class="screen active">
+
+    <div class="warning-banner">⚠ 警告：このコンテンツは淫夢を知る者のみが入るべし ⚠</div>
+
+    <div class="win-box">
+      <div class="win-box-title">
+        <span>📺 検定情報 - 淫夢検定β</span>
+        <div class="win-box-btns">
+          <div class="win-box-btn">_</div>
+          <div class="win-box-btn">□</div>
+          <div class="win-box-btn">×</div>
+        </div>
+      </div>
+      <div class="win-box-body">
+        <div class="paper-inner">
+          <div class="tag-area">
+            <span class="nico-tag">淫夢</span><span class="nico-tag">ミーム</span><span class="nico-tag">ホモ</span>
+            <span class="nico-tag">野獣先輩</span><span class="nico-tag">なんJ</span><span class="nico-tag">検定</span><span class="nico-tag">18禁</span>
+          </div>
+          <hr class="divider">
+          <div style="font-size:12px;color:var(--ink2);line-height:2.1;margin-bottom:10px">
+            全<strong>15問</strong>の選択式クイズ。毎回ランダムに出題。<br>
+            淫夢ミームへの造詣の深さを4段階で判定します。<br>
+            <span style="color:var(--rust);font-size:11px">※ 18歳未満の方は速やかにブラウザを閉じてください</span><br>
+            <span style="color:var(--rust);font-size:11px">※ 職場・学校等での閲覧は自己責任でお願いします</span>
+          </div>
+          <div class="grade-row">
+            <span class="grade-pill gp-homo">ホモ</span>
+            <span class="grade-pill gp-adv">上級</span>
+            <span class="grade-pill gp-mid">中級</span>
+            <span class="grade-pill gp-beg">初級</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="win-box">
+      <div class="win-box-title">
+        <span>📊 等級基準</span>
+        <div class="win-box-btns">
+          <div class="win-box-btn">_</div><div class="win-box-btn">□</div><div class="win-box-btn">×</div>
+        </div>
+      </div>
+      <div class="win-box-body">
+        <table class="grade-table">
+          <tr><td>正答率 80%以上（12問〜）</td><td class="homo-c">ホモ</td></tr>
+          <tr><td>正答率 60〜79%（9〜11問）</td><td class="adv-c">上級</td></tr>
+          <tr><td>正答率 40〜59%（6〜8問）</td><td class="mid-c">中級</td></tr>
+          <tr><td>正答率 39%以下（〜5問）</td><td class="beg-c">初級</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <button class="win-btn win-btn-start" onclick="startQuiz()">▶　検定スタート　▶</button>
+  </div>
+
+  <!-- ===== QUIZ ===== -->
+  <div id="screen-quiz" class="screen">
+    <div class="q-meta-bar">
+      <span id="q-count">問題 1 / 15</span>
+      <span class="live-score" id="q-score-live">得点: 0 pt</span>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label" id="progress-label">▓░░░░░░░░░ 0%</div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="win-box">
+      <div class="win-box-title" id="q-header-bar">
+        <span>❓ 問題 1</span>
+        <div class="win-box-btns">
+          <div class="win-box-btn">_</div><div class="win-box-btn">□</div><div class="win-box-btn">×</div>
+        </div>
+      </div>
+      <div class="win-box-body">
+        <div>
+          <span class="q-num-tag" id="q-num-tag">Q1</span>
+          <span class="q-level-tag" id="q-level-tag"></span>
+        </div>
+        <div class="q-text" id="q-text"></div>
+        <div class="choices" id="choices"></div>
+        <div class="feedback hidden" id="feedback"></div>
+        <button class="win-btn win-btn-next hidden" id="next-btn" onclick="nextQuestion()">次の問題 ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== RESULT ===== -->
+  <div id="screen-result" class="screen">
+    <div class="win-box">
+      <div class="win-box-title">
+        <span>🏆 検定結果</span>
+        <div class="win-box-btns">
+          <div class="win-box-btn">_</div><div class="win-box-btn">□</div><div class="win-box-btn">×</div>
+        </div>
+      </div>
+      <div class="win-box-body">
+        <div class="result-center">
+          <p class="result-label">─ あなたの等級 ─</p>
+          <div class="big-grade" id="result-grade" data-text=""></div>
+          <p class="score-text" id="result-score"></p>
+        </div>
+        <div class="score-bar-outer"><div class="score-bar-fill" id="score-bar" style="width:0%"></div></div>
+        <div class="grade-desc-box" id="grade-desc"></div>
+        <!-- 広告スロット -->
+        <div class="ad-slot">[ 広告スペース ]<br><span style="font-size:10px">設定後にここに広告が表示されます</span></div>
+        <button class="win-btn win-btn-retry" onclick="resetQuiz()">↩ もう一度挑戦する</button>
+      </div>
+    </div>
+    <div class="win-box">
+      <div class="win-box-title">
+        <span>📋 回答履歴</span>
+        <div class="win-box-btns">
+          <div class="win-box-btn">_</div><div class="win-box-btn">□</div><div class="win-box-btn">×</div>
+        </div>
+      </div>
+      <div class="win-box-body">
+        <div class="answer-log" id="answer-log"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main-wrap -->
+
+<script>
+// ============================================================
+// 問題プール
+// ============================================================
+const POOL = {
+  easy: [
+    {q:"淫夢シリーズの主人公格として知られるキャラクターの呼び名は？",choices:["野獣先輩","加藤くん","KBTITさん","TDN"],answer:0,comment:"「野獣先輩」は真夏の夜の淫夢シリーズの中心人物として知られるキャラクターです。"},
+    {q:"「ｱｰｲｷｿ」は誰のセリフ？",choices:["KBTIT","野獣先輩","TDN","MUR"],answer:1,comment:"「ｱｰｲｷｿ」は野獣先輩の代表的な声・セリフとして有名です。"},
+    {q:"「イキスギィ！」はどのような状況で使われるミームか？",choices:["驚いたとき","盛り上がりすぎ・やりすぎを表すとき","悲しいとき","眠いとき"],answer:1,comment:"「イキスギィ！」は過度な盛り上がりや「やりすぎ」を表すときに使われます。"},
+    {q:"淫夢語録「おかのした」はどういう意味？",choices:["お腹が空いた","お菓子をください","了解しました","おかしいですよ"],answer:2,comment:"「おかのした」は「了解しました」の意味で使われる語録です。"},
+    {q:"「多少はね？」はどんな意味で使われる？",choices:["絶対にダメ","少しくらいなら仕方ない・まあそうだね","よくわからない","冗談だよ"],answer:1,comment:"「多少はね？」は「まあそうだよね」「仕方ない」という肯定・同意を表します。"},
+    {q:"「24歳、学生です」は誰の自己紹介として知られる？",choices:["KBTIT","加藤くん","野獣先輩","TDN"],answer:2,comment:"「24歳、学生です」は野獣先輩の自己紹介として有名な語録です。"},
+    {q:"淫夢語録「ダメみたいですね」はどんなニュアンスで使われる？",choices:["怒りを表す","喜びを表す","諦め・お手上げを表す","命令する"],answer:2,comment:"「ダメみたいですね」は諦め・失敗の受け入れを表す脱力系の語録です。"},
+    {q:"淫夢がネットミームとして広まった最大のプラットフォームは？",choices:["Twitter","YouTube","Instagram","ニコニコ動画・2ちゃんねる"],answer:3,comment:"ニコニコ動画と2ch（現5ch）を中心に淫夢文化は広まりました。"},
+    {q:"「こ↑こ↓」はどんな語録？",choices:["怒って叫ぶセリフ","独特のイントネーションで「ここ」と言うセリフ","笑いを表す","別れの言葉"],answer:1,comment:"「こ↑こ↓」は野獣先輩の独特のイントネーションが特徴的な語録です。"},
+    {q:"「ヌッ！」は何を表す語録？",choices:["くしゃみ","驚き","突然立ち上がる・脱ぐ動作の擬音","転ぶ"],answer:2,comment:"「ヌッ！」は急に立ち上がったり脱いだりする動作の擬音として有名です。"},
+    {q:"「†悔い改めて†」はどんなときに使われる？",choices:["お礼を言うとき","別れを告げるとき","食事のとき","相手に反省・改心を促すとき"],answer:3,comment:"「†悔い改めて†」は相手に改心・反省を迫るときに使われる語録です。"},
+    {q:"淫夢文化において「88888」（8連打）は何を意味する？",choices:["ブーイング","無視","エラー","拍手・称賛"],answer:3,comment:"「88888」はキーボードで打ちやすい「ぱちぱちぱち」の拍手を表します。"},
+  ],
+  mid: [
+    {q:"「はっきりわかんだね」はどんな意味で使われる？",choices:["全然わからない（逆説的）","どちらともいえない","冗談のつもり","はっきりとわかった（肯定）"],answer:3,comment:"「はっきりわかんだね」は「はっきりとわかった」という同意・確認の語録です。"},
+    {q:"「いいねぇー」は誰の語録？",choices:["KBTIT","TDN","野獣先輩","加藤くん"],answer:2,comment:"「いいねぇー」は野獣先輩の肯定・賛同を示す語録として有名です。"},
+    {q:"「ぬわあああん疲れたもおおおん」の語録の特徴は？",choices:["怒りを爆発させる","喜びを叫ぶ","眠気を表す","疲労・消耗を大げさに表現する"],answer:3,comment:"「ぬわあああん疲れたもおおん」は過度な疲労感を大げさに表現する語録です。"},
+    {q:"「王道を征く」は淫夢でどんな意味で使われる？",choices:["逃げる","諦める","裏切る","正攻法・正統派なやり方を選ぶ"],answer:3,comment:"「王道を征く」は真っ当なやり方や定番の選択をすることを表します。"},
+    {q:"「ファッ⁉」はどんな場面で使う語録？",choices:["怒るとき","眠いとき","お腹が空いたとき","驚き・意外性を表すとき"],answer:3,comment:"「ファッ⁉」は予想外の出来事や驚きを表すときに使われる語録です。"},
+    {q:"「じゃけん夜行きましょうね～」はどんな文脈で使われる？",choices:["断るとき","反省するとき","寝るとき","強引に誘う・流れに任せて行動する"],answer:3,comment:"「じゃけん〜しましょうね」は強引かつのんびりした誘いの構文として定着しています。"},
+    {q:"「だいぶ溜まってんじゃんアゼルバイジャン」の面白さの核心は？",choices:["長い単語","怒っている","関係ない話題","語尾が国名と韻を踏んでいる"],answer:3,comment:"「溜まってんじゃん」と「アゼルバイジャン」が韻を踏んでいるのがポイントです。"},
+    {q:"「大会近いからね、しょうがないね」はどんな文脈で使われる？",choices:["謝罪","自慢","勧誘","何かをやらかした・サボった言い訳"],answer:3,comment:"「大会近いから」という無関係な理由で言い訳する構文として使われます。"},
+    {q:"「白菜かけますね」はどんなシーンの語録？",choices:["怒るセリフ","別れのセリフ","挨拶のセリフ","食事シーンで唐突に言うセリフ"],answer:3,comment:"「白菜かけますね」は唐突な食事シーンのセリフで、シュールさが人気の語録です。"},
+    {q:"「気持ちよくなっちゃう、ヤバイヤバイ」はどんな場面で引用される？",choices:["怖い場面","眠い場面","空腹の場面","快感・高揚感が高まりすぎる場面"],answer:3,comment:"興奮・快感が高まる場面で引用される野獣先輩の語録です。"},
+    {q:"「喉渇いた…喉渇かない？」はどんな語録として知られる？",choices:["怒りのセリフ","謝罪のセリフ","別れのセリフ","何気ない日常会話を装った誘いのセリフ"],answer:3,comment:"さりげなく相手を誘う・つなぎとめるニュアンスを持つ語録として使われます。"},
+    {q:"「ピトン…ポチョン…（明鏡止水）」はどんな意味で使われる？",choices:["激しく怒る様子","大笑いする様子","泣く様子","心が静まり返り無の境地になる様子"],answer:3,comment:"「明鏡止水」という表現と合わせて、静かで無の境地を表す語録です。"},
+  ],
+  hard: [
+    {q:"「ブッチッパ！」は淫夢のどんな場面から来た語録？",choices:["静かに立ち去るとき","泣くとき","笑うとき","勢いよく動作するときの擬音"],answer:3,comment:"「ブッチッパ！」は勢い・力強い動作の擬音として使われる語録です。"},
+    {q:"「ｸｩｰﾝ...」はどんなときに使われる語録？",choices:["怒り","笑い","驚き","しょんぼり・弱々しくなっている様子"],answer:3,comment:"「ｸｩｰﾝ...」は犬の鳴き声風に情けなくしょんぼりした様子を表します。"},
+    {q:"「クチアケーナ・ホラ」はどんな語録？",choices:["怒鳴る言葉","別れを告げる言葉","笑う言葉","口を開けるよう促す言葉"],answer:3,comment:"「クチアケーナ・ホラ」は口を開けるよう促す、独特の言い回しの語録です。"},
+    {q:"「しかし、修行やってます。いつの日か世界を救うと信じて。」の雰囲気は？",choices:["泣いている","怒っている","笑っている","大真面目に自分の鍛錬を語るシュールさ"],answer:3,comment:"真剣に語る内容のシュールさが笑いを生む、野獣先輩の名語録です。"},
+    {q:"「そして天は鳴き、大地は震えるだろうね」はどんなトーンの語録？",choices:["謝罪する","怯える","諦める","大げさに自分の行動・存在感を語る"],answer:3,comment:"自分の行動を大げさに表現する、中二病的な語録として知られています。"},
+    {q:"「まずうちさぁ、屋上…あんだけど、焼いてかない？」はどんな意味で使われる？",choices:["怒って屋上に呼び出す","脅す","別れる","唐突に屋上でBBQに誘う"],answer:3,comment:"脈絡なく屋上でのBBQに誘うシュールさが特徴の語録です。"},
+    {q:"「He didn't…he begin…」は淫夢のどんな文脈の語録？",choices:["怒りのセリフ","笑いのセリフ","別れのセリフ","英語の字幕・翻訳がおかしいことで有名"],answer:3,comment:"変な英語字幕として知られており、文法的におかしいことが笑いのポイントです。"},
+    {q:"「焼く時は！」はどんな語録として定着している？",choices:["怒りの叫び","勝利の宣言","別れの言葉","唐突に炭火・肉を焼く話を始めるシュールな語録"],answer:3,comment:"「焼く時は！」は唐突に料理・炭火の話をするシュールな語録として知られています。"},
+    {q:"「Foo↑気持ちぃ～」はどんなシーンの語録？",choices:["怒り","眠気","空腹","高揚感・快感の絶頂を表す独特の発声"],answer:3,comment:"独特の発声で快感・高揚感の絶頂を表す野獣先輩の語録です。"},
+    {q:"「ふたいたい」はどう読む・どんな語録？",choices:["「二体」のこと","「不退退」の当て字","「太い」の変換ミス","「二人でいたい」の甘えた言い方"],answer:3,comment:"「二人でいたい」を甘えた・崩した言い方にした語録です。"},
+    {q:"「MURさん夜中腹減んないすか？」はどんな語録として知られる？",choices:["怒りのセリフ","別れのセリフ","謝罪のセリフ","深夜に唐突に食欲・誘いを切り出す語録"],answer:3,comment:"深夜に突然食べ物・出かける誘いをする、脈絡のなさが特徴の語録です。"},
+    {q:"「やめたくなりますよなんか部っ活ぅ～」はどんな状況で引用される？",choices:["怒って退部宣言する場面","喜んで入部する場面","試合に勝った場面","つらいことがあって投げやりになる場面"],answer:3,comment:"投げやり・やる気喪失のニュアンスで引用される野獣先輩の語録です。"},
+  ],
+};
+
+// ============================================================
+// ランダム抽出＋選択肢シャッフル
+// ============================================================
+function pickRandom(arr, n) {
+  return [...arr].sort(() => Math.random() - 0.5).slice(0, n);
+}
+function shuffleChoices(q) {
+  const correctText = q.choices[q.answer];
+  const shuffled = [...q.choices].sort(() => Math.random() - 0.5);
+  return { ...q, choices: shuffled, answer: shuffled.indexOf(correctText) };
+}
+function buildQuestions() {
+  const easy = pickRandom(POOL.easy, 5).map(q => shuffleChoices({...q, level:'easy'}));
+  const mid  = pickRandom(POOL.mid,  5).map(q => shuffleChoices({...q, level:'mid'}));
+  const hard = pickRandom(POOL.hard, 5).map(q => shuffleChoices({...q, level:'hard'}));
+  return [...easy, ...mid, ...hard].sort(() => Math.random() - 0.5);
+}
+
+// ============================================================
+// 流れるコメント
+// ============================================================
+const COMMENTS = [
+  {text:"ｱｰｲｷｿ",color:"#8a4848",size:22},{text:"88888888",color:"#5a7870",size:20},
+  {text:"野獣先輩！！",color:"#7a4848",size:18},{text:"おかのした",color:"#5a4870",size:16},
+  {text:"イキスギィ！",color:"#8a4848",size:24},{text:"多少はね？",color:"#5a7870",size:16},
+  {text:"はっきりわかんだね",color:"#5a5a5a",size:15},{text:"ダメみたいですね",color:"#7a4848",size:16},
+  {text:"ファッ⁉",color:"#5a7870",size:22},{text:"†悔い改めて†",color:"#5a3070",size:17},
+  {text:"ｸｩｰﾝ...",color:"#5a5a5a",size:16},{text:"ブッチッパ！",color:"#8a4848",size:20},
+  {text:"24歳、学生です",color:"#5a7870",size:14},{text:"ヌッ！",color:"#7a4848",size:26},
+  {text:"気持ちよくなっちゃう",color:"#7a4848",size:15},{text:"アゼルバイジャン",color:"#5a7870",size:16},
+  {text:"Foo↑気持ちぃ～",color:"#8a4848",size:19},{text:"ぬわあああん疲れたもおおん",color:"#5a5a5a",size:13},
+  {text:"いいねぇ～",color:"#7a4848",size:18},{text:"王道を征く",color:"#5a4870",size:16},
+  {text:"白菜かけますね",color:"#5a5a5a",size:15},{text:"焼く時は！",color:"#7a3030",size:20},
+  {text:"ヌキすぎィ！",color:"#8a4848",size:18},{text:"おかのした定期",color:"#5a7870",size:14},
+];
+
+function spawnComment() {
+  const c = COMMENTS[Math.floor(Math.random() * COMMENTS.length)];
+  const el = document.createElement('div');
+  el.className = 'nico-comment';
+  el.textContent = c.text;
+  el.style.color = c.color;
+  el.style.top = Math.random() * 92 + 'vh';
+  el.style.fontSize = c.size + 'px';
+  el.style.opacity = (0.4 + Math.random() * 0.35).toFixed(2);
+  const dur = 6 + Math.random() * 7;
+  el.style.animationDuration = dur + 's';
+  document.getElementById('nico-comments').appendChild(el);
+  setTimeout(() => el.remove(), dur * 1000 + 300);
+}
+setInterval(spawnComment, 800);
+
+// 再生数
+let viewCount = Math.floor(Math.random() * 40000) + 8000;
+document.getElementById('view-count').textContent = String(viewCount).padStart(6, '0');
+setInterval(() => {
+  viewCount += Math.floor(Math.random() * 3);
+  const el = document.getElementById('view-count');
+  if (el) el.textContent = String(viewCount).padStart(6, '0');
+}, 3500);
+
+// ============================================================
+// WebAudio ビープ音
+// ============================================================
+function beep(freq, dur, type='square', vol=0.08) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = type; osc.frequency.value = freq;
+    gain.gain.setValueAtTime(vol, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    osc.start(); osc.stop(ctx.currentTime + dur);
+  } catch(e) {}
+}
+function playCorrect() { beep(880, 0.1); setTimeout(() => beep(1320, 0.15), 80); }
+function playWrong()   { beep(220, 0.3, 'sawtooth', 0.06); }
+function playStart()   { beep(440, 0.08); setTimeout(() => beep(550, 0.08), 80); setTimeout(() => beep(660, 0.15), 160); }
+function playResult()  {
+  [440,494,523,587,659,698,784].forEach((f,i) => setTimeout(() => beep(f, 0.12), i*60));
+}
+
+// ============================================================
+// ゲームロジック
+// ============================================================
+const LEVEL_LABEL = {easy:'初級', mid:'中級', hard:'上級'};
+const LEVEL_CLS   = {easy:'lv-easy', mid:'lv-mid', hard:'lv-hard'};
+
+let QUESTIONS = [], currentQ = 0, score = 0, answered = false, log = [];
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function startQuiz() {
+  QUESTIONS = buildQuestions();
+  currentQ = 0; score = 0; answered = false; log = [];
+  playStart();
+  show('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  const total = QUESTIONS.length;
+  const pct = Math.round((currentQ / total) * 100);
+  const filled = Math.round(pct / 10);
+  const bar = '▓'.repeat(filled) + '░'.repeat(10 - filled);
+
+  document.getElementById('q-count').textContent = `問題 ${currentQ + 1} / ${total}`;
+  document.getElementById('q-score-live').textContent = `得点: ${score} pt`;
+  document.getElementById('q-num-tag').textContent = `Q${currentQ + 1}`;
+  document.getElementById('q-header-bar').innerHTML = `<span>❓ 問題 ${currentQ + 1}</span><div class="win-box-btns"><div class="win-box-btn">_</div><div class="win-box-btn">□</div><div class="win-box-btn">×</div></div>`;
+  document.getElementById('progress-fill').style.width = `${pct}%`;
+  document.getElementById('progress-label').textContent = `${bar} ${pct}%`;
+  document.getElementById('q-text').textContent = q.q;
+
+  const lvTag = document.getElementById('q-level-tag');
+  lvTag.textContent = LEVEL_LABEL[q.level];
+  lvTag.className = `q-level-tag ${LEVEL_CLS[q.level]}`;
+
+  answered = false;
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback hidden'; fb.textContent = '';
+  document.getElementById('next-btn').className = 'win-btn win-btn-next hidden';
+
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+  q.choices.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = c;
+    btn.onclick = () => selectAnswer(i);
+    choicesEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = QUESTIONS[currentQ];
+  const btns = document.querySelectorAll('.choice-btn');
+  btns.forEach(b => b.disabled = true);
+  const isCorrect = idx === q.answer;
+  btns[idx].classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) btns[q.answer].classList.add('correct');
+  if (isCorrect) { score++; playCorrect(); } else { playWrong(); }
+  log.push({ q: q.q, correct: isCorrect, right: q.choices[q.answer], level: q.level });
+
+  const fb = document.getElementById('feedback');
+  fb.className = `feedback ${isCorrect ? 'correct' : 'wrong'}`;
+  fb.textContent = (isCorrect ? '正解！ ' : `不正解。正解は「${q.choices[q.answer]}」。\n`) + q.comment;
+
+  const nb = document.getElementById('next-btn');
+  nb.className = 'win-btn win-btn-next';
+  nb.textContent = currentQ + 1 < QUESTIONS.length ? '次の問題 ▶' : '結果を見る ▶';
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= QUESTIONS.length) showResult();
+  else renderQuestion();
+}
+
+function showResult() {
+  show('screen-result');
+  const total = QUESTIONS.length;
+  const pct = Math.round((score / total) * 100);
+  let grade, desc, color;
+  if (pct >= 80) {
+    grade = 'ホモ'; color = '#8a5858';
+    desc = '完璧な淫夢知識の持ち主。あなたはもはや淫夢の申し子。野獣先輩も認める境地に達しました。ｱｰｲｷｿ';
+  } else if (pct >= 60) {
+    grade = '上級'; color = '#6a8480';
+    desc = '淫夢の深部まで理解している上級者。あと少しで「ホモ」の称号に手が届きます。はっきりわかんだね。';
+  } else if (pct >= 40) {
+    grade = '中級'; color = '#8a7020';
+    desc = '基本的な淫夢知識はあるものの、まだ奥が深い。さらなる修行が必要です。ダメみたいですね。';
+  } else {
+    grade = '初級'; color = '#666';
+    desc = '淫夢の世界はまだ未知数。まずは基礎から学び直して再挑戦しよう！おかのした。';
+  }
+
+  playResult();
+  const gradeEl = document.getElementById('result-grade');
+  gradeEl.textContent = grade;
+  gradeEl.dataset.text = grade;
+  gradeEl.style.color = color;
+  gradeEl.style.textShadow = `2px 2px 0 ${color}44, -1px 0 0 #6a848044`;
+  document.getElementById('result-score').textContent = `${score} / ${total} 問正解（正答率 ${pct}%）`;
+  document.getElementById('grade-desc').textContent = desc;
+  setTimeout(() => { document.getElementById('score-bar').style.width = `${pct}%`; }, 200);
+
+  const logEl = document.getElementById('answer-log');
+  logEl.innerHTML = '<h3>回答履歴</h3>';
+  log.forEach((l, i) => {
+    const div = document.createElement('div');
+    div.className = `log-item ${l.correct ? 'ok' : 'ng'}`;
+    div.innerHTML = `<span class="log-mark">${l.correct ? '○' : '×'}</span><span>Q${i+1}[${LEVEL_LABEL[l.level]}] ${l.q.slice(0,24)}… ${l.correct ? '' : '→「' + l.right + '」'}</span>`;
+    logEl.appendChild(div);
+  });
+}
+
+function resetQuiz() { show('screen-start'); }
+</script>
+</body>
+</html>

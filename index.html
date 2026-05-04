@@ -456,6 +456,62 @@ body::after {
   border-bottom: 1px solid var(--mauve);
   margin-bottom: 8px;
 }
+
+/* ===== 賞状エリア ===== */
+#cert-canvas {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  border: 3px double #8a5858;
+  box-shadow: 3px 3px 0 #000, 6px 6px 0 rgba(138,88,88,0.3);
+  cursor: pointer;
+}
+.cert-canvas-wrap {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.cert-canvas-wrap p {
+  font-size: 10px; color: #888; margin-top: 4px;
+  font-family: 'DotGothic16', monospace;
+}
+.share-btns {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.share-btn {
+  flex: 1; min-width: 120px;
+  padding: 8px 10px;
+  font-family: 'DotGothic16', monospace;
+  font-size: 12px; letter-spacing: 0.05em;
+  border: 2px solid; border-color: #fff #808080 #808080 #fff;
+  box-shadow: 1px 1px 0 #000;
+  cursor: pointer; text-align: center;
+  background: #c0c0c0; color: #000;
+}
+.share-btn:active { border-color: #808080 #fff #fff #808080; box-shadow: none; transform: translate(1px,1px); }
+.share-btn-save { background: linear-gradient(180deg,#c8d8c8,#88a888); border-color: #d8e8d8 #406040 #406040 #d8e8d8; }
+.share-btn-x    { background: linear-gradient(180deg,#404040,#202020); color: #fff; border-color: #606060 #101010 #101010 #606060; }
+
+/* ===== 賞状モーダル ===== */
+#cert-modal {
+  display: none;
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.88);
+  align-items: center; justify-content: center;
+}
+#cert-modal.open { display: flex; }
+#cert-modal-img {
+  max-width: 96vw; max-height: 92vh;
+  border: 4px double #8a5858;
+  box-shadow: 0 0 40px rgba(138,88,88,0.4);
+}
+#cert-modal-close {
+  position: absolute; top: 12px; right: 16px;
+  color: #fff; font-size: 32px; cursor: pointer;
+  font-family: monospace; line-height: 1;
+  text-shadow: 0 0 8px rgba(255,0,0,0.7);
+  z-index: 10000;
+}
 </style>
 </head>
 <body>
@@ -593,11 +649,48 @@ body::after {
         </div>
         <div class="score-bar-outer"><div class="score-bar-fill" id="score-bar" style="width:0%"></div></div>
         <div class="grade-desc-box" id="grade-desc"></div>
-        <!-- 広告スロット -->
+      </div>
+    </div>
+
+    <!-- 賞状ボックス -->
+    <div class="win-box">
+      <div class="win-box-title">
+        <span>🎖️ 認定証 - 淫夢検定</span>
+        <div class="win-box-btns">
+          <div class="win-box-btn">_</div><div class="win-box-btn">□</div><div class="win-box-btn">×</div>
+        </div>
+      </div>
+      <div class="win-box-body">
+        <div class="cert-canvas-wrap">
+          <canvas id="cert-canvas" width="560" height="396" onclick="openCertModal()"></canvas>
+          <p>↑ タップで拡大表示</p>
+        </div>
+        <div class="share-btns">
+          <button class="share-btn share-btn-save" onclick="saveCert()">💾 画像を保存</button>
+          <button class="share-btn share-btn-x" onclick="shareX()">𝕏 Xでシェア</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="win-box">
+      <div class="win-box-title">
+        <span></span>
+        <div class="win-box-btns">
+          <div class="win-box-btn">_</div><div class="win-box-btn">□</div><div class="win-box-btn">×</div>
+        </div>
+      </div>
+      <div class="win-box-body">
+        <!-- 広告スロット: 掲載開始時は↓のコメントアウトを外す -->
+        <!--
         <div class="ad-slot">[ 広告スペース ]<br><span style="font-size:10px">設定後にここに広告が表示されます</span></div>
+        -->
         <button class="win-btn win-btn-retry" onclick="resetQuiz()">↩ もう一度挑戦する</button>
       </div>
     </div>
+
+    <div class="win-box">
+      <div class="win-box-title">
+        <span>📋 回答履歴</span>
     <div class="win-box">
       <div class="win-box-title">
         <span>📋 回答履歴</span>
@@ -613,52 +706,58 @@ body::after {
 
 </div><!-- /main-wrap -->
 
+<!-- ===== 賞状拡大モーダル ===== -->
+<div id="cert-modal" onclick="closeCertModal()">
+  <span id="cert-modal-close" onclick="closeCertModal()">×</span>
+  <img id="cert-modal-img" src="" alt="認定証">
+</div>
+
 <script>
 // ============================================================
 // 問題プール
 // ============================================================
 const POOL = {
   easy: [
+    {q:"ｱｰｲｷｿは誰のセリフ？",choices:["野獣先輩","KBTIT","TDN","MUR"],answer:0,comment:"「ｱｰｲｷｿ」は野獣先輩の代表的な声・セリフとして有名です。"},
+    {q:"淫夢語録「おかのした」はどういう意味？",choices:["了解しました","お腹が空いた","お菓子をください","おかしいですよ"],answer:0,comment:"「おかのした」は「了解しました」の意味で使われる語録です。"},
+    {q:"野獣先輩のインタビュー時の年齢といえば？",choices:["24歳","23歳","22歳","21歳"],answer:0,comment:"野獣先輩は自己紹介で「24歳、学生です」と述べており、インタビュー時24歳でした。"},
+    {q:"野獣の咆哮として有名な叫び声といえば？",choices:["イキスギィ！","やめろぉ（建前）ナイスゥ（本音）","シュバルゴ！","〆鯖ァ！"],answer:0,comment:"「イキスギィ！」は野獣先輩の絶頂時の叫び声として広くミーム化しています。"},
+    {q:"身長170cm、体重が74kgの登場人物といえば？",choices:["野獣先輩","TDN","MUR","TON"],answer:0,comment:"野獣先輩のスペックとして知られるプロフィールです。"},
+    {q:"後輩を自宅に誘った際に自分の家を指さし言った語録は？",choices:["こ↑こ↓","ここなんだよね","こ→こ→","ここだよー"],answer:0,comment:"独特のイントネーション「こ↑こ↓」は野獣先輩の代表的な語録の一つです。"},
+    {q:"淫夢語録の文脈として、まずうちにあるものといえば？",choices:["屋上","サウナ","プール","テレビ"],answer:0,comment:"「まずうちさぁ、屋上…あんだけど」という語録から。唐突な屋上BBQ誘いが名シーンです。"},
+    {q:"「これもうわかんねぇな」が出てきたシチュエーションとして正しいものは？",choices:["後輩と比べた時の自分の日焼け具合","謎が多い事件現場","難しい問題を解いているとき","今後どうなるかの見通しが立たないとき"],answer:0,comment:"野獣先輩が後輩の肌と自分の日焼けを比較しての発言。脱力感あふれる語録です。"},
     {q:"淫夢シリーズの主人公格として知られるキャラクターの呼び名は？",choices:["野獣先輩","加藤くん","KBTITさん","TDN"],answer:0,comment:"「野獣先輩」は真夏の夜の淫夢シリーズの中心人物として知られるキャラクターです。"},
-    {q:"「ｱｰｲｷｿ」は誰のセリフ？",choices:["KBTIT","野獣先輩","TDN","MUR"],answer:1,comment:"「ｱｰｲｷｿ」は野獣先輩の代表的な声・セリフとして有名です。"},
-    {q:"「イキスギィ！」はどのような状況で使われるミームか？",choices:["驚いたとき","盛り上がりすぎ・やりすぎを表すとき","悲しいとき","眠いとき"],answer:1,comment:"「イキスギィ！」は過度な盛り上がりや「やりすぎ」を表すときに使われます。"},
-    {q:"淫夢語録「おかのした」はどういう意味？",choices:["お腹が空いた","お菓子をください","了解しました","おかしいですよ"],answer:2,comment:"「おかのした」は「了解しました」の意味で使われる語録です。"},
-    {q:"「多少はね？」はどんな意味で使われる？",choices:["絶対にダメ","少しくらいなら仕方ない・まあそうだね","よくわからない","冗談だよ"],answer:1,comment:"「多少はね？」は「まあそうだよね」「仕方ない」という肯定・同意を表します。"},
-    {q:"「24歳、学生です」は誰の自己紹介として知られる？",choices:["KBTIT","加藤くん","野獣先輩","TDN"],answer:2,comment:"「24歳、学生です」は野獣先輩の自己紹介として有名な語録です。"},
-    {q:"淫夢語録「ダメみたいですね」はどんなニュアンスで使われる？",choices:["怒りを表す","喜びを表す","諦め・お手上げを表す","命令する"],answer:2,comment:"「ダメみたいですね」は諦め・失敗の受け入れを表す脱力系の語録です。"},
-    {q:"淫夢がネットミームとして広まった最大のプラットフォームは？",choices:["Twitter","YouTube","Instagram","ニコニコ動画・2ちゃんねる"],answer:3,comment:"ニコニコ動画と2ch（現5ch）を中心に淫夢文化は広まりました。"},
-    {q:"「こ↑こ↓」はどんな語録？",choices:["怒って叫ぶセリフ","独特のイントネーションで「ここ」と言うセリフ","笑いを表す","別れの言葉"],answer:1,comment:"「こ↑こ↓」は野獣先輩の独特のイントネーションが特徴的な語録です。"},
-    {q:"「ヌッ！」は何を表す語録？",choices:["くしゃみ","驚き","突然立ち上がる・脱ぐ動作の擬音","転ぶ"],answer:2,comment:"「ヌッ！」は急に立ち上がったり脱いだりする動作の擬音として有名です。"},
-    {q:"「†悔い改めて†」はどんなときに使われる？",choices:["お礼を言うとき","別れを告げるとき","食事のとき","相手に反省・改心を促すとき"],answer:3,comment:"「†悔い改めて†」は相手に改心・反省を迫るときに使われる語録です。"},
-    {q:"淫夢文化において「88888」（8連打）は何を意味する？",choices:["ブーイング","無視","エラー","拍手・称賛"],answer:3,comment:"「88888」はキーボードで打ちやすい「ぱちぱちぱち」の拍手を表します。"},
+    {q:"「ヌッ！」は何を表す語録？",choices:["突然立ち上がる・脱ぐ動作の擬音","くしゃみ","驚き","転ぶ"],answer:0,comment:"「ヌッ！」は急に立ち上がったり脱いだりする動作の擬音として有名です。"},
+    {q:"淫夢文化において「88888」（8連打）は何を意味する？",choices:["拍手・称賛","ブーイング","無視","エラー"],answer:0,comment:"「88888」はキーボードで打ちやすい「ぱちぱちぱち」の拍手を表します。"},
+    {q:"「多少はね？」はどんな意味で使われる？",choices:["少しくらいなら仕方ない・まあそうだね","絶対にダメ","よくわからない","冗談だよ"],answer:0,comment:"「多少はね？」は「まあそうだよね」「仕方ない」という肯定・同意を表します。"},
   ],
   mid: [
-    {q:"「はっきりわかんだね」はどんな意味で使われる？",choices:["全然わからない（逆説的）","どちらともいえない","冗談のつもり","はっきりとわかった（肯定）"],answer:3,comment:"「はっきりわかんだね」は「はっきりとわかった」という同意・確認の語録です。"},
-    {q:"「いいねぇー」は誰の語録？",choices:["KBTIT","TDN","野獣先輩","加藤くん"],answer:2,comment:"「いいねぇー」は野獣先輩の肯定・賛同を示す語録として有名です。"},
-    {q:"「ぬわあああん疲れたもおおおん」の語録の特徴は？",choices:["怒りを爆発させる","喜びを叫ぶ","眠気を表す","疲労・消耗を大げさに表現する"],answer:3,comment:"「ぬわあああん疲れたもおおん」は過度な疲労感を大げさに表現する語録です。"},
-    {q:"「王道を征く」は淫夢でどんな意味で使われる？",choices:["逃げる","諦める","裏切る","正攻法・正統派なやり方を選ぶ"],answer:3,comment:"「王道を征く」は真っ当なやり方や定番の選択をすることを表します。"},
-    {q:"「ファッ⁉」はどんな場面で使う語録？",choices:["怒るとき","眠いとき","お腹が空いたとき","驚き・意外性を表すとき"],answer:3,comment:"「ファッ⁉」は予想外の出来事や驚きを表すときに使われる語録です。"},
-    {q:"「じゃけん夜行きましょうね～」はどんな文脈で使われる？",choices:["断るとき","反省するとき","寝るとき","強引に誘う・流れに任せて行動する"],answer:3,comment:"「じゃけん〜しましょうね」は強引かつのんびりした誘いの構文として定着しています。"},
-    {q:"「だいぶ溜まってんじゃんアゼルバイジャン」の面白さの核心は？",choices:["長い単語","怒っている","関係ない話題","語尾が国名と韻を踏んでいる"],answer:3,comment:"「溜まってんじゃん」と「アゼルバイジャン」が韻を踏んでいるのがポイントです。"},
-    {q:"「大会近いからね、しょうがないね」はどんな文脈で使われる？",choices:["謝罪","自慢","勧誘","何かをやらかした・サボった言い訳"],answer:3,comment:"「大会近いから」という無関係な理由で言い訳する構文として使われます。"},
-    {q:"「白菜かけますね」はどんなシーンの語録？",choices:["怒るセリフ","別れのセリフ","挨拶のセリフ","食事シーンで唐突に言うセリフ"],answer:3,comment:"「白菜かけますね」は唐突な食事シーンのセリフで、シュールさが人気の語録です。"},
-    {q:"「気持ちよくなっちゃう、ヤバイヤバイ」はどんな場面で引用される？",choices:["怖い場面","眠い場面","空腹の場面","快感・高揚感が高まりすぎる場面"],answer:3,comment:"興奮・快感が高まる場面で引用される野獣先輩の語録です。"},
-    {q:"「喉渇いた…喉渇かない？」はどんな語録として知られる？",choices:["怒りのセリフ","謝罪のセリフ","別れのセリフ","何気ない日常会話を装った誘いのセリフ"],answer:3,comment:"さりげなく相手を誘う・つなぎとめるニュアンスを持つ語録として使われます。"},
-    {q:"「ピトン…ポチョン…（明鏡止水）」はどんな意味で使われる？",choices:["激しく怒る様子","大笑いする様子","泣く様子","心が静まり返り無の境地になる様子"],answer:3,comment:"「明鏡止水」という表現と合わせて、静かで無の境地を表す語録です。"},
+    {q:"「はっきりわかんだね」はどんな意味で使われる？",choices:["はっきりとわかった（肯定）","全然わからない","どちらともいえない","冗談のつもり"],answer:0,comment:"「はっきりわかんだね」は「はっきりとわかった」という同意・確認の語録です。"},
+    {q:"水泳部の後輩を自宅に招いた際にかけるべき適切な言葉といえば？",choices:["悔い♰改めて♰","いいよ上がって","散らかってるけど気にしないで","ゆっくりしていってね"],answer:0,comment:"「†悔い改めて†」は相手に改心・反省を迫るときに使われる語録で、特定のシーンの名言です。"},
+    {q:"睡眠薬入りの飲み物を飲んでしまった後輩にかけるべき適切な言葉は？",choices:["おっ、大丈夫か大丈夫か","横になる？","暴れんな…暴れんなよ！","どうした？平気か？"],answer:0,comment:"眠気に抗う後輩への野獣先輩の言葉として有名な語録です。"},
+    {q:"好きな人への迫真の愛の告白といえば？",choices:["お前のことが好きだったんだよ！（迫真）","好きです！付き合ってください！オナシャス！センセンシャル！","愛してるって…イワナ、書かなかった？","おうじゃあ愛の告白をぶちこんでやるぜ"],answer:0,comment:"「お前のことが好きだったんだよ！（迫真）」は野獣先輩の熱烈な告白として知られています。"},
+    {q:"「はっきりわかんだね」をいった人物といえば？",choices:["野獣先輩","KBTIT","TDN","MUR"],answer:0,comment:"「はっきりわかんだね」は野獣先輩の語録です。"},
+    {q:"「ファッ⁉」はどんな場面で使う語録？",choices:["驚き・意外性を表すとき","怒るとき","眠いとき","お腹が空いたとき"],answer:0,comment:"「ファッ⁉」は予想外の出来事や驚きを表すときに使われる語録です。"},
+    {q:"「じゃけん夜行きましょうね～」はどんな文脈で使われる？",choices:["強引に誘う・流れに任せて行動する","断るとき","反省するとき","寝るとき"],answer:0,comment:"「じゃけん〜しましょうね」は強引かつのんびりした誘いの構文として定着しています。"},
+    {q:"「だいぶ溜まってんじゃんアゼルバイジャン」の面白さの核心は？",choices:["語尾が国名と韻を踏んでいる","長い単語","怒っている","関係ない話題"],answer:0,comment:"「溜まってんじゃん」と「アゼルバイジャン」が韻を踏んでいるのがポイントです。"},
+    {q:"「大会近いからね、しょうがないね」はどんな文脈で使われる？",choices:["何かをやらかした・サボった言い訳","謝罪","自慢","勧誘"],answer:0,comment:"「大会近いから」という無関係な理由で言い訳する構文として使われます。"},
+    {q:"「いいねぇー」は誰の語録？",choices:["野獣先輩","KBTIT","TDN","加藤くん"],answer:0,comment:"「いいねぇー」は野獣先輩の肯定・賛同を示す語録として有名です。"},
+    {q:"「喉渇いた…喉渇かない？」はどんな語録として知られる？",choices:["何気ない日常会話を装った誘いのセリフ","怒りのセリフ","謝罪のセリフ","別れのセリフ"],answer:0,comment:"さりげなく相手を誘う・つなぎとめるニュアンスを持つ語録として使われます。"},
+    {q:"「ぬわあああん疲れたもおおおん」の語録の特徴は？",choices:["疲労・消耗を大げさに表現する","怒りを爆発させる","喜びを叫ぶ","眠気を表す"],answer:0,comment:"「ぬわあああん疲れたもおおん」は過度な疲労感を大げさに表現する語録です。"},
   ],
   hard: [
-    {q:"「ブッチッパ！」は淫夢のどんな場面から来た語録？",choices:["静かに立ち去るとき","泣くとき","笑うとき","勢いよく動作するときの擬音"],answer:3,comment:"「ブッチッパ！」は勢い・力強い動作の擬音として使われる語録です。"},
-    {q:"「ｸｩｰﾝ...」はどんなときに使われる語録？",choices:["怒り","笑い","驚き","しょんぼり・弱々しくなっている様子"],answer:3,comment:"「ｸｩｰﾝ...」は犬の鳴き声風に情けなくしょんぼりした様子を表します。"},
-    {q:"「クチアケーナ・ホラ」はどんな語録？",choices:["怒鳴る言葉","別れを告げる言葉","笑う言葉","口を開けるよう促す言葉"],answer:3,comment:"「クチアケーナ・ホラ」は口を開けるよう促す、独特の言い回しの語録です。"},
-    {q:"「しかし、修行やってます。いつの日か世界を救うと信じて。」の雰囲気は？",choices:["泣いている","怒っている","笑っている","大真面目に自分の鍛錬を語るシュールさ"],answer:3,comment:"真剣に語る内容のシュールさが笑いを生む、野獣先輩の名語録です。"},
-    {q:"「そして天は鳴き、大地は震えるだろうね」はどんなトーンの語録？",choices:["謝罪する","怯える","諦める","大げさに自分の行動・存在感を語る"],answer:3,comment:"自分の行動を大げさに表現する、中二病的な語録として知られています。"},
-    {q:"「まずうちさぁ、屋上…あんだけど、焼いてかない？」はどんな意味で使われる？",choices:["怒って屋上に呼び出す","脅す","別れる","唐突に屋上でBBQに誘う"],answer:3,comment:"脈絡なく屋上でのBBQに誘うシュールさが特徴の語録です。"},
-    {q:"「He didn't…he begin…」は淫夢のどんな文脈の語録？",choices:["怒りのセリフ","笑いのセリフ","別れのセリフ","英語の字幕・翻訳がおかしいことで有名"],answer:3,comment:"変な英語字幕として知られており、文法的におかしいことが笑いのポイントです。"},
-    {q:"「焼く時は！」はどんな語録として定着している？",choices:["怒りの叫び","勝利の宣言","別れの言葉","唐突に炭火・肉を焼く話を始めるシュールな語録"],answer:3,comment:"「焼く時は！」は唐突に料理・炭火の話をするシュールな語録として知られています。"},
-    {q:"「Foo↑気持ちぃ～」はどんなシーンの語録？",choices:["怒り","眠気","空腹","高揚感・快感の絶頂を表す独特の発声"],answer:3,comment:"独特の発声で快感・高揚感の絶頂を表す野獣先輩の語録です。"},
-    {q:"「ふたいたい」はどう読む・どんな語録？",choices:["「二体」のこと","「不退退」の当て字","「太い」の変換ミス","「二人でいたい」の甘えた言い方"],answer:3,comment:"「二人でいたい」を甘えた・崩した言い方にした語録です。"},
-    {q:"「MURさん夜中腹減んないすか？」はどんな語録として知られる？",choices:["怒りのセリフ","別れのセリフ","謝罪のセリフ","深夜に唐突に食欲・誘いを切り出す語録"],answer:3,comment:"深夜に突然食べ物・出かける誘いをする、脈絡のなさが特徴の語録です。"},
-    {q:"「やめたくなりますよなんか部っ活ぅ～」はどんな状況で引用される？",choices:["怒って退部宣言する場面","喜んで入部する場面","試合に勝った場面","つらいことがあって投げやりになる場面"],answer:3,comment:"投げやり・やる気喪失のニュアンスで引用される野獣先輩の語録です。"},
+    {q:"浣腸をされた野獣先輩がトイレで出した大便の排泄音の語録として正しいのはどれ？",choices:["ﾌﾞﾘﾌﾞﾘﾌﾞﾘﾌﾞﾘｭﾘｭﾘｭﾘｭﾘｭﾘｭ！！！！！！ﾌﾞﾂﾁﾁﾌﾞﾌﾞﾌﾞﾁﾁﾁﾁﾌﾞﾘﾘｲﾘﾌﾞﾌﾞﾌﾞﾌﾞｩｩｩｩｯｯｯ！！！！！！！","ブッチッパ！","ヌッ！","ｱｰｲｷｿ"],answer:0,comment:"野獣先輩が浣腸後にトイレでリリーフした際の排泄音を文字化した、淫夢最長語録の一つです。"},
+    {q:"真夏の夜の淫夢第１章で、TDN達が疲れから激突してしまった黒塗りの高級車の車種は何か？",choices:["センチュリー","クラウン","セルシオ","ヴェルファイア"],answer:0,comment:"第1章の名シーン。TDN達が帰宅途中に高級車（センチュリー）にぶつかってしまいます。"},
+    {q:"真夏の夜の淫夢第4章で、野獣先輩がTONに勧めた飲み物といえば？",choices:["アイスティー","レモンティー","ルイボスティー","麦茶"],answer:0,comment:"第4章のシーンで野獣先輩がTONに「アイスティー飲む？」と勧める場面があります。"},
+    {q:"拓也さんの別名としてふさわしくないものはどれ？",choices:["バーテンダー","悶絶少年専属教師","バカ乳首","北京原人"],answer:0,comment:"拓也さんは「悶絶少年専属教師」「バカ乳首」「北京原人」などの別名で呼ばれますが、「バーテンダー」はKBTITの別名です。"},
+    {q:"「ファッ！？」は何に対する驚きの語録か？",choices:["胸にかけて胸にと言ったのにTONが顔にかけてきたとき","野獣先輩が突然倒れたとき","KBTITが登場したとき","TDNが逃げ出したとき"],answer:0,comment:"野獣先輩が「胸にかけて！胸に！」と言ったのにTONが顔にかけてきたことへの驚き・抗議の語録です。"},
+    {q:"バーテンダーである拓也さんがお客さんに注文されて提供した飲み物といえば？",choices:["缶ビール","ウイスキー","ハイボール","炭酸水"],answer:0,comment:"バーテンダーKBTITが提供したのは缶ビール。シュールさが特徴の名シーンです。"},
+    {q:"「ブッチッパ！」は淫夢のどんな場面から来た語録？",choices:["勢いよく動作するときの擬音","静かに立ち去るとき","泣くとき","笑うとき"],answer:0,comment:"「ブッチッパ！」は勢い・力強い動作の擬音として使われる語録です。"},
+    {q:"「ｸｩｰﾝ...」はどんなときに使われる語録？",choices:["しょんぼり・弱々しくなっている様子","怒り","笑い","驚き"],answer:0,comment:"「ｸｩｰﾝ...」は犬の鳴き声風に情けなくしょんぼりした様子を表します。"},
+    {q:"「しかし、修行やってます。いつの日か世界を救うと信じて。」の雰囲気は？",choices:["大真面目に自分の鍛錬を語るシュールさ","泣いている","怒っている","笑っている"],answer:0,comment:"真剣に語る内容のシュールさが笑いを生む、野獣先輩の名語録です。"},
+    {q:"「Foo↑気持ちぃ～」はどんなシーンの語録？",choices:["高揚感・快感の絶頂を表す独特の発声","怒り","眠気","空腹"],answer:0,comment:"独特の発声で快感・高揚感の絶頂を表す野獣先輩の語録です。"},
+    {q:"「まずうちさぁ、屋上…あんだけど、焼いてかない？」はどんな意味で使われる？",choices:["唐突に屋上でBBQに誘う","怒って屋上に呼び出す","脅す","別れる"],answer:0,comment:"脈絡なく屋上でのBBQに誘うシュールさが特徴の語録です。"},
+    {q:"「やめたくなりますよなんか部っ活ぅ～」はどんな状況で引用される？",choices:["つらいことがあって投げやりになる場面","怒って退部宣言する場面","喜んで入部する場面","試合に勝った場面"],answer:0,comment:"投げやり・やる気喪失のニュアンスで引用される野獣先輩の語録です。"},
   ],
 };
 
@@ -858,6 +957,11 @@ function showResult() {
   document.getElementById('grade-desc').textContent = desc;
   setTimeout(() => { document.getElementById('score-bar').style.width = `${pct}%`; }, 200);
 
+  // 賞状描画
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
+  setTimeout(() => drawCertificate(grade, score, total, pct, dateStr), 300);
+
   const logEl = document.getElementById('answer-log');
   logEl.innerHTML = '<h3>回答履歴</h3>';
   log.forEach((l, i) => {
@@ -869,6 +973,220 @@ function showResult() {
 }
 
 function resetQuiz() { show('screen-start'); }
+
+// ============================================================
+// 賞状 Canvas 描画
+// ============================================================
+let _certDataUrl = '';
+
+const CERT_CONF = {
+  homo: {
+    bg: ['#1a0a0a','#2e1010'],
+    border1: '#8a3030', border2: '#c86060', border3: '#ff9090',
+    titleColor: '#ffcccc', gradeColor: '#ff8888',
+    seal: '#cc4444', sealText: '#fff',
+    phrase: 'ｱｰｲｷｿ ── 完全なる淫夢の使徒',
+    stamp: '認定',
+  },
+  upper: {
+    bg: ['#0a1210','#101e1a'],
+    border1: '#2a5048', border2: '#4a8070', border3: '#88c0b0',
+    titleColor: '#b8e0d8', gradeColor: '#6ad4c0',
+    seal: '#2a7060', sealText: '#e0fff8',
+    phrase: 'はっきりわかんだね ── 淫夢の深淵に片足を踏み入れた者',
+    stamp: '合格',
+  },
+  mid: {
+    bg: ['#120f00','#1e1800'],
+    border1: '#5a4400', border2: '#8a7020', border3: '#c8a840',
+    titleColor: '#e8d080', gradeColor: '#d4a820',
+    seal: '#7a5800', sealText: '#fff8e0',
+    phrase: 'ダメみたいですね ── されど修行の余地あり',
+    stamp: '認定',
+  },
+  beg: {
+    bg: ['#0c0c0c','#181818'],
+    border1: '#404040', border2: '#686868', border3: '#a0a0a0',
+    titleColor: '#d0d0d0', gradeColor: '#a0a0a0',
+    seal: '#505050', sealText: '#f0f0f0',
+    phrase: 'おかのした ── 淫夢への入口に立った者',
+    stamp: '受験',
+  },
+};
+
+function drawCertificate(grade, score, total, pct, dateStr) {
+  const canvas = document.getElementById('cert-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = 560, H = 396;
+
+  const key = grade === 'ホモ' ? 'homo' : grade === '上級' ? 'upper' : grade === '中級' ? 'mid' : 'beg';
+  const cf = CERT_CONF[key];
+
+  // ── 背景グラデーション
+  const bg = ctx.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0, cf.bg[0]);
+  bg.addColorStop(1, cf.bg[1]);
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // ── ノイズテクスチャ（粒感）
+  for (let i = 0; i < 2400; i++) {
+    const x = Math.random() * W, y = Math.random() * H;
+    const a = Math.random() * 0.12;
+    ctx.fillStyle = `rgba(255,255,255,${a})`;
+    ctx.fillRect(x, y, 1, 1);
+  }
+
+  // ── 外枠（三重）
+  ctx.strokeStyle = cf.border1; ctx.lineWidth = 14;
+  ctx.strokeRect(7, 7, W-14, H-14);
+  ctx.strokeStyle = cf.border2; ctx.lineWidth = 2;
+  ctx.strokeRect(16, 16, W-32, H-32);
+  ctx.strokeStyle = cf.border3; ctx.lineWidth = 1;
+  ctx.strokeRect(20, 20, W-40, H-40);
+
+  // ── 四隅の装飾
+  const corners = [[24,24],[W-24,24],[24,H-24],[W-24,H-24]];
+  corners.forEach(([cx,cy]) => {
+    ctx.strokeStyle = cf.border3; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(cx, cy, 8, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx-14,cy); ctx.lineTo(cx+14,cy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx,cy-14); ctx.lineTo(cx,cy+14); ctx.stroke();
+  });
+
+  // ── タイトル行
+  ctx.textAlign = 'center';
+  ctx.fillStyle = cf.titleColor;
+  ctx.font = 'bold 13px monospace';
+  ctx.letterSpacing = '0.3em';
+  ctx.fillText('── 淫 夢 検 定  公 式 認 定 証 ──', W/2, 56);
+
+  // ── 細ライン
+  ctx.strokeStyle = cf.border2; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(32,66); ctx.lineTo(W-32,66); ctx.stroke();
+
+  // ── 等級（大）
+  ctx.font = 'bold 90px monospace';
+  // 影
+  ctx.fillStyle = 'rgba(0,0,0,0.6)';
+  ctx.fillText(grade, W/2+4, 170);
+  // グロー
+  ctx.shadowColor = cf.gradeColor;
+  ctx.shadowBlur = 28;
+  ctx.fillStyle = cf.gradeColor;
+  ctx.fillText(grade, W/2, 166);
+  ctx.shadowBlur = 0;
+
+  // ── 等級ふりがな
+  ctx.font = '11px monospace';
+  ctx.fillStyle = cf.border3;
+  const gradeRuby = {ホモ:'[ homo ]', 上級:'[ advanced ]', 中級:'[ intermediate ]', 初級:'[ beginner ]'};
+  ctx.fillText(gradeRuby[grade] || '', W/2, 186);
+
+  // ── 仕切り線
+  ctx.strokeStyle = cf.border2; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(32,196); ctx.lineTo(W-32,196); ctx.stroke();
+
+  // ── スコア行
+  ctx.font = 'bold 15px monospace';
+  ctx.fillStyle = cf.titleColor;
+  ctx.fillText(`${score} / ${total} 問正解　　正答率  ${pct}%`, W/2, 222);
+
+  // ── フレーズ
+  ctx.font = '11px monospace';
+  ctx.fillStyle = cf.border3;
+  ctx.fillText(cf.phrase, W/2, 246);
+
+  // ── 受験日
+  ctx.font = '10px monospace';
+  ctx.fillStyle = '#888';
+  ctx.fillText(`受験日：${dateStr}`, W/2, 266);
+
+  // ── 下ライン
+  ctx.strokeStyle = cf.border2; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(32,280); ctx.lineTo(W-32,280); ctx.stroke();
+
+  // ── サイト名
+  ctx.font = 'bold 12px monospace';
+  ctx.fillStyle = cf.titleColor;
+  ctx.fillText('淫夢検定  β', W/2, 302);
+  ctx.font = '10px monospace';
+  ctx.fillStyle = '#666';
+  ctx.fillText('https://ofuji132632-max.github.io/innmukenntei/', W/2, 318);
+
+  // ── スコアバー
+  const barX = 80, barY = 334, barW = W-160, barH = 14;
+  ctx.fillStyle = 'rgba(0,0,0,0.4)';
+  ctx.fillRect(barX, barY, barW, barH);
+  const fillW = Math.round(barW * pct / 100);
+  const barGrad = ctx.createLinearGradient(barX, 0, barX+barW, 0);
+  barGrad.addColorStop(0, cf.seal);
+  barGrad.addColorStop(1, cf.border3);
+  ctx.fillStyle = barGrad;
+  ctx.fillRect(barX, barY, fillW, barH);
+  ctx.strokeStyle = cf.border2; ctx.lineWidth = 1;
+  ctx.strokeRect(barX, barY, barW, barH);
+
+  // ── スタンプ風円形印
+  const sx = W - 80, sy = H - 70;
+  ctx.save();
+  ctx.globalAlpha = 0.82;
+  // 外円
+  ctx.strokeStyle = cf.seal; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.arc(sx, sy, 34, 0, Math.PI*2); ctx.stroke();
+  ctx.strokeStyle = cf.seal; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(sx, sy, 28, 0, Math.PI*2); ctx.stroke();
+  // 中の文字
+  ctx.fillStyle = cf.seal;
+  ctx.font = 'bold 18px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(cf.stamp, sx, sy+7);
+  // 上下弧テキスト
+  ctx.font = '7px monospace';
+  ['淫','夢','検','定'].forEach((ch, i) => {
+    const angle = -Math.PI/2 + (i - 1.5) * (Math.PI / 7);
+    const tx = sx + 22 * Math.cos(angle);
+    const ty = sy + 22 * Math.sin(angle);
+    ctx.save(); ctx.translate(tx, ty); ctx.rotate(angle + Math.PI/2);
+    ctx.fillStyle = cf.seal; ctx.fillText(ch, 0, 0); ctx.restore();
+  });
+  ctx.restore();
+
+  // ── 左下 ニコ動コメント風装飾
+  ctx.font = '9px monospace';
+  ctx.fillStyle = 'rgba(138,88,88,0.5)';
+  ctx.textAlign = 'left';
+  ctx.fillText('88888　ｱｰｲｷｿ　おかのした　88888', 32, H-18);
+
+  ctx.textAlign = 'center'; // reset
+
+  _certDataUrl = canvas.toDataURL('image/png');
+}
+
+function openCertModal() {
+  if (!_certDataUrl) return;
+  document.getElementById('cert-modal-img').src = _certDataUrl;
+  document.getElementById('cert-modal').classList.add('open');
+}
+function closeCertModal() {
+  document.getElementById('cert-modal').classList.remove('open');
+}
+
+function saveCert() {
+  if (!_certDataUrl) return;
+  const a = document.createElement('a');
+  a.href = _certDataUrl;
+  a.download = '淫夢検定_認定証.png';
+  a.click();
+}
+
+function shareX() {
+  const grade = document.getElementById('result-grade').textContent;
+  const scoreText = document.getElementById('result-score').textContent;
+  const text = `淫夢検定で「${grade}」認定されました！\n${scoreText}\n#淫夢検定 #野獣先輩`;
+  const url = 'https://ofuji132632-max.github.io/innmukenntei/';
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+}
 </script>
 </body>
 </html>
